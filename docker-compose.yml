@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: jeanferreira/nginx:prod
+    build:
+      context: ./nginx
+    container_name: nginx
+    restart: always
+    ports: 
+      - '8080:80'
+    depends_on:
+      - node
+    networks:
+      - intranet
+  
+  node:
+    image: jeanferreira/node:prod
+    container_name: node
+    restart: always
+    build:
+      context: ./node
+    depends_on:
+      - db
+    networks:
+      - intranet
+
+  db:
+    image: jeanferreira/mysql:prod
+    build: 
+      context: ./mysql
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: db
+    restart: always
+    tty: true
+    networks:
+      - intranet
+    volumes:
+      - ./mysql/volume:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=banco
+      - MYSQL_ROOT_PASSWORD=MinhaSenha
+
+networks:
+  intranet:
+    driver: bridge
