@@ -1,4 +1,4 @@
-#Nginx com Node.js
+Nginx com Node.js
 
 
 Nesse desafio você colocará em prática o que aprendemos em relação a utilização do nginx como proxy reverso.
