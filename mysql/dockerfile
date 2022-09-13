@@ -1,9 +1,5 @@
-FROM nginx:stable-alpine
+FROM mysql:5.7
 
-COPY nginx.conf /etc/nginx/nginx.conf
+CMD [ "--innodb-use-native-aio=0" ]
 
-EXPOSE 80
-
-ENTRYPOINT [ "/docker-entrypoint.sh" ]
-
-CMD [ "nginx", "-g", "daemon off;" ]
+COPY setup.sql /docker-entrypoint-initdb.d/
