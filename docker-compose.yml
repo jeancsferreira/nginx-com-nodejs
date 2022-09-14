@@ -1,3 +1,4 @@
+#com dockerize mata o db
 version: '3.7'
 
 services:
@@ -11,28 +12,36 @@ services:
       - '8080:80'
     depends_on:
       - node
+      - db
     networks:
       - intranet
   
   node:
     image: jeanferreira/node:prod
     container_name: node
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 10s docker-entrypoint.sh
+    command: bash -c "npm install && node server.js"
     restart: always
+    tty: true
     build:
       context: ./node
     depends_on:
       - db
     networks:
       - intranet
-
+    
   db:
     image: jeanferreira/mysql:prod
     build: 
       context: ./mysql
     command: --default-authentication-plugin=mysql_native_password
     container_name: db
-    restart: always
+    restart: on-failure
+    ports:
+      - "33000:3306"
     tty: true
+    expose:
+      - 3306
     networks:
       - intranet
     volumes:
