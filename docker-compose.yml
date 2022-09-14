@@ -1,4 +1,3 @@
-#com dockerize mata o db
 version: '3.7'
 
 services:
